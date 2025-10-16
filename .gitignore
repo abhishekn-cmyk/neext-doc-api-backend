@@ -1,0 +1,61 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Typescript build outputs
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# TypeScript cache
+*.tsbuildinfo
+
+# IDEs and editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# macOS files
+.DS_Store
+
+# Miscellaneous
+coverage/
+*.log
+*.gz
+*.zip
+
+# Ignore Jest cache and coverage
+jest-cache/
+jest-coverage/
+
+# Ignore ESLint cache
+.eslintcache
+
+# Ignore parcel cache
+.cache/
+
+# Ignore any compiled output for TypeScript
+*.js
+*.js.map
+*.d.ts
+
+# Ignore Yarn
+.yarn-integrity
+.pnp.*
+.vercel
+*/uploads
