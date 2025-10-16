@@ -39,6 +39,7 @@ const allowedOrigins = [
   "https://next-doc-uk.vercel.app",
   "https://next-doc-uk-admin.vercel.app",
   "https://next-doc-mentor.vercel.app",
+  "https://next-doc-uk-frontends.onrender.com"
 ];
 
 app.use(
