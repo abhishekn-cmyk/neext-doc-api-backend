@@ -6,11 +6,12 @@
     "outDir": "dist",
     "rootDir": "src",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": false,
     "target": "ES2020",
     "noEmit": false,
-    "allowSyntheticDefaultImports": true,
-    "typeRoots": ["./src/types", "./node_modules/@types"]
+    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "types": ["node"]
   },
   "include": ["src/**/*", "src/types/**/*.d.ts"],
   "exclude": ["node_modules"]
