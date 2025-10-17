@@ -48,19 +48,19 @@ router.get("/:id/categories", getCategoriesByTool);
 // ---------------- TOOL CRUD (SuperAdmin) ----------------
 router.post(
   "/",
-  protect,
-  authorize(["SuperAdmin"]),
+  // protect,
+  // authorize(["SuperAdmin"]),
   upload.single("image"),
   createTool
 );
 router.put(
   "/:id",
-  protect,
-  authorize(["SuperAdmin"]),
+  // protect,
+  // authorize(["SuperAdmin"]),
   upload.single("image"),
   updateTool
 );
-router.delete("/:id", protect, authorize(["SuperAdmin"]), deleteTool);
+router.delete("/:id",  deleteTool);
 router.post(
   "/:id/categories",
   protect,
