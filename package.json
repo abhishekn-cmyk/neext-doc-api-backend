@@ -4,6 +4,7 @@
   "main": "dist/app.js",
   "scripts": {
     "build": "tsc",
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "start": "node dist/app.js"
   },
   "author": "anirudh kille",
@@ -43,6 +44,7 @@
     "@types/stripe": "^8.0.416",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
   }
 }

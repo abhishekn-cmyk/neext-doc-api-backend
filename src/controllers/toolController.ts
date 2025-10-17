@@ -112,86 +112,73 @@ const parseDateField = (field: any): Date | undefined => {
 };
 
 export const updateTool = asyncHandler(async (req: Request, res: Response) => {
-  const tool = await Tool.findById(req.params.id);
-  if (!tool) {
-    res.status(404).json({ success: false, message: "Tool not found" });
-  }
-
-  const data: any = {};
-
-  // Parse arrays
-  data.features = parseArrayField(req.body.features);
-  data.pricingOptions = parseArrayField(req.body.pricingOptions);
-  data.actions = parseArrayField(req.body.actions);
-  data.categories = parseArrayField(req.body.categories);
-  data.exams = parseArrayField(req.body.exams);
-
-  // Parse objects
-  data.personal = parseObjectField(req.body.personal);
-  data.status = parseObjectField(req.body.status);
-  data.examsData = parseObjectField(req.body.examsData);
-  data.goals = parseObjectField(req.body.goals);
-
-  // Parse number fields
-  if ("basePrice" in req.body) {
-    const num = parseNumberField(req.body.basePrice);
-    if (num !== undefined) data.basePrice = num;
-  }
-
-  // Optional: parse date fields if any
-  if ("someDateField" in req.body) {
-    const date = parseDateField(req.body.someDateField);
-    if (date) data.someDateField = date;
-  }
-
-  // Copy other string fields, ignoring empty strings
-  Object.keys(req.body).forEach((key) => {
-    if (
-      ![
-        "features",
-        "pricingOptions",
-        "actions",
-        "categories",
-        "exams",
-        "personal",
-        "status",
-        "examsData",
-        "goals",
-        "basePrice",
-        "someDateField",
-      ].includes(key)
-    ) {
-      if (req.body[key] !== "") {
-        data[key] = req.body[key];
-      }
-    }
-  });
-
-  // Handle uploaded image
-  if (req.file) {
-    if (tool.image) deleteOldImage(tool.image);
-    data.image = `/uploads/${req.file.filename}`;
-  }
-
-  console.log("✅ [UPDATE TOOL] Final data to update:", data);
-
   try {
+    const tool = await Tool.findById(req.params.id);
+    if (!tool) {
+      console.log("❌ Tool not found for id:", req.params.id);
+     res.status(404).json({ success: false, message: "Tool not found" });
+    }
+
+    console.log("📥 [UPDATE TOOL] Incoming body:", req.body);
+    console.log("📸 [UPDATE TOOL] Uploaded file:", req.file);
+
+    const data: any = {};
+
+    // Parse arrays
+    data.features = parseArrayField(req.body.features);
+    data.pricingOptions = parseArrayField(req.body.pricingOptions);
+    data.actions = parseArrayField(req.body.actions);
+    data.categories = parseArrayField(req.body.categories);
+    data.exams = parseArrayField(req.body.exams);
+
+    // Parse objects
+    data.personal = parseObjectField(req.body.personal);
+    data.status = parseObjectField(req.body.status);
+    data.examsData = parseObjectField(req.body.examsData);
+    data.goals = parseObjectField(req.body.goals);
+
+    // Parse number fields
+    if ("basePrice" in req.body) {
+      const num = parseNumberField(req.body.basePrice);
+      if (num !== undefined) data.basePrice = num;
+    }
+
+    // Copy other string fields
+    Object.keys(req.body).forEach((key) => {
+      if (![
+        "features","pricingOptions","actions","categories","exams",
+        "personal","status","examsData","goals","basePrice"
+      ].includes(key)) {
+        if (req.body[key] !== "") data[key] = req.body[key];
+      }
+    });
+
+    // Handle uploaded image
+    if (req.file) {
+      if (tool.image) deleteOldImage(tool.image);
+      data.image = `/uploads/${req.file.filename}`;
+    }
+
+    console.log("✅ [UPDATE TOOL] Final data to update:", data);
+
     const updatedTool = await Tool.findByIdAndUpdate(
       req.params.id,
-      { $set: data }, // use $set to avoid timestamp errors
+      { $set: data },
       { new: true, runValidators: true }
     );
 
     res.json({ success: true, data: updatedTool });
   } catch (err: any) {
-    console.error("❌ [UPDATE TOOL] Mongoose update error:", err);
+    console.error("❌ [UPDATE TOOL] Caught error:", err);
     res.status(500).json({
       success: false,
       message: "Server error",
       error: err.message,
+      stack: err.stack,
     });
   }
 });
+
 // Admin: Delete tool
 
 export const deleteTool = asyncHandler(async (req: Request, res: Response) => {
