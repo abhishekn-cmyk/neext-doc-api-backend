@@ -20,43 +20,41 @@ import {
   updateProposal,
   deleteProposal,
 } from "../controllers/researchController";
-import { protect } from "../middlewares/authMiddleware";
-import { authorize } from "../middlewares/roleMiddleware";
 
 const router = express.Router();
 
 //
-// ---------- Publications (Admin only for CRUD, User can only view) ----------
-router.get("/publications",  getPublications);
-router.post("/publications", protect, authorize(["SuperAdmin"]), createPublication);
-router.put("/publications/:id", protect, authorize(["SuperAdmin"]), updatePublication);
-router.delete("/publications/:id", protect, authorize(["SuperAdmin"]), deletePublication);
+// ---------- Publications ----------
+router.get("/publications", getPublications);
+router.post("/publications", createPublication);
+router.put("/publications/:id", updatePublication);
+router.delete("/publications/:id", deletePublication);
 
 //
 // ---------- Focus Areas ----------
-router.get("/focus-areas",  getFocusAreas);
-router.post("/focus-areas", protect, authorize(["SuperAdmin"]), createFocusArea);
-router.put("/focus-areas/:id", protect, authorize(["SuperAdmin"]), updateFocusArea);
-router.delete("/focus-areas/:id", protect, authorize(["SuperAdmin"]), deleteFocusArea);
+router.get("/focus-areas", getFocusAreas);
+router.post("/focus-areas", createFocusArea);
+router.put("/focus-areas/:id", updateFocusArea);
+router.delete("/focus-areas/:id", deleteFocusArea);
 
 //
 // ---------- Partnerships ----------
-router.get("/partnerships",  getPartnerships);
-router.post("/partnerships", protect, authorize(["SuperAdmin"]), createPartnership);
-router.put("/partnerships/:id", protect, authorize(["SuperAdmin"]), updatePartnership);
-router.delete("/partnerships/:id", protect, authorize(["SuperAdmin"]), deletePartnership);
+router.get("/partnerships", getPartnerships);
+router.post("/partnerships", createPartnership);
+router.put("/partnerships/:id", updatePartnership);
+router.delete("/partnerships/:id", deletePartnership);
 
 //
-// ---------- Participations (Users can create, view their own; Admin full control) ----------
-router.get("/participations", protect, authorize(["SuperAdmin"]), getParticipations); // Admin can see all
-router.post("/participations", protect, authorize(["User", "SuperAdmin"]), createParticipation);
-router.put("/participations/:id", protect, authorize(["SuperAdmin"]), updateParticipation);
+// ---------- Participations ----------
+router.get("/participations", getParticipations);
+router.post("/participations", createParticipation);
+router.put("/participations/:id", updateParticipation);
 
 //
-// ---------- Proposals (Users can submit, Admin reviews) ----------
-router.get("/proposals", protect, authorize(["SuperAdmin"]), getProposals); // Admin sees all proposals
-router.post("/proposals", protect, authorize(["User", "SuperAdmin"]), createProposal);
-router.put("/proposals/:id", protect, authorize(["SuperAdmin"]), updateProposal);
-router.delete("/proposals/:id", protect, authorize(["SuperAdmin"]), deleteProposal);
+// ---------- Proposals ----------
+router.get("/proposals", getProposals);
+router.post("/proposals", createProposal);
+router.put("/proposals/:id", updateProposal);
+router.delete("/proposals/:id", deleteProposal);
 
 export default router;

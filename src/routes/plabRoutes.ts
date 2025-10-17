@@ -8,32 +8,19 @@ import {
   toggleFlagQuestion,
   completeSession,
 } from "../controllers/PlabController";
-import { protect } from "../middlewares/authMiddleware";
-import { authorize } from "../middlewares/roleMiddleware";
 
 const router = express.Router();
 
-// Admin routes
-router.post(
-  "/admin/questions",
-  protect,
-  authorize(["SuperAdmin"]),
-  addQuestions
-);
-router.put(
-  "/admin/questions/:questionId",
-  protect,
-  authorize(["SuperAdmin"]),
-  updateQuestion
-);
+// Admin routes (now public)
+router.post("/admin/questions", addQuestions);
+router.put("/admin/questions/:questionId", updateQuestion);
 
 // User routes
-// Admin fetch questions
 router.get("/questions", getQuestions);
 
-router.post("/sessions/start", protect, startSession);
-router.post("/sessions/:sessionId/answer", protect, submitAnswer);
-router.post("/sessions/:sessionId/flag", protect, toggleFlagQuestion);
-router.post("/sessions/:sessionId/complete", protect, completeSession);
+router.post("/sessions/start", startSession);
+router.post("/sessions/:sessionId/answer", submitAnswer);
+router.post("/sessions/:sessionId/flag", toggleFlagQuestion);
+router.post("/sessions/:sessionId/complete", completeSession);
 
 export default router;

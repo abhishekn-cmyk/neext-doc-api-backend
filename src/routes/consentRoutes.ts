@@ -1,23 +1,21 @@
 import express from "express";
-import { protect } from "../middlewares/authMiddleware";
-import { authorize } from "../middlewares/roleMiddleware";
 import {
   saveConsent,
   getConsent,
   adminUpdateConsent,
-  adminCreateConsent,   // <-- new controller
-  adminGetAllConsents,  // <-- optional: list all consents
+  adminCreateConsent,
+  adminGetAllConsents,
 } from "../controllers/consentController";
 
 const router = express.Router();
 
-// Public (works with or without login)
+// Public routes
 router.post("/", saveConsent);
-router.get("/me",  getConsent); // if logged in → by userId, else → by IP
+router.get("/me", getConsent); // works by userId if logged in, else by IP
 
-// Admin
-router.post("/admin", protect, authorize(["SuperAdmin"]), adminCreateConsent);  // <-- add consent
-router.get("/admin", protect, authorize(["SuperAdmin"]), adminGetAllConsents); // <-- optional list
-router.put("/admin/update-consent", protect, authorize(["SuperAdmin"]), adminUpdateConsent);
+// Admin routes without auth (now public, be careful!)
+router.post("/admin", adminCreateConsent);  
+router.get("/admin", adminGetAllConsents); 
+router.put("/admin/update-consent", adminUpdateConsent);
 
 export default router;

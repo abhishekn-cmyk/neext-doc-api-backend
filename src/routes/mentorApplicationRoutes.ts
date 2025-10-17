@@ -6,8 +6,6 @@ import {
   updateTerms,
   rejectMentor,
 } from "../controllers/mentorApplicationController";
-import { protect } from "../middlewares/authMiddleware";
-import { authorize } from "../middlewares/roleMiddleware";
 import multer from "multer";
 
 const router = express.Router();
@@ -22,10 +20,11 @@ const storage = multer.diskStorage({
 
 export const upload = multer({ storage });
 
+// All routes public now
 router.post("/", upload.any(), createMentorApplication);
-router.get("/", protect, authorize(["SuperAdmin"]), getMentorApplication);
-router.put("/terms/:id", protect, authorize(["SuperAdmin"]), updateTerms);
-router.put("/approve/:id", protect, authorize(["SuperAdmin"]), approveMentor);
-router.put("/reject/:id", protect, authorize(["SuperAdmin"]), rejectMentor);
+router.get("/", getMentorApplication);
+router.put("/terms/:id", updateTerms);
+router.put("/approve/:id", approveMentor);
+router.put("/reject/:id", rejectMentor);
 
 export default router;

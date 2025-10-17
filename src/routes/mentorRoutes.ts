@@ -17,11 +17,10 @@ import {
   updateProfile,
 } from "../controllers/MentorController";
 import { upload } from "../middlewares/upload";
-import { authorize } from "../middlewares/roleMiddleware";
-import { protect } from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
+// Mentor routes with file uploads
 router.post(
   "/",
   upload.fields([
@@ -51,22 +50,23 @@ router.put(
   updateMentor
 );
 
-
-
+// Mentee routes
 router.route("/mentees").get(getMentees).post(createMentee);
 
 router
   .route("/mentees/:id")
-  .get(protect, authorize(["SuperAdmin"]), getMentee)
-  .put(protect, authorize(["SuperAdmin"]), updateMentee)
-  .delete(protect, authorize(["SuperAdmin"]), deleteMentee);
+  .get(getMentee)
+  .put(updateMentee)
+  .delete(deleteMentee);
 
-router.delete("/:id", protect, authorize(["SuperAdmin"]), deleteMentor);
+// Delete mentor
+router.delete("/:id", deleteMentor);
 
+// Auth routes
 router.post("/login", loginMentor);
 router.post("/forgot-password", forgotPassword);
 router.patch("/reset-password", resetPassword);
-router.get("/profile", protect, profile);
-router.patch("/profile", protect, updateProfile);
+router.get("/profile", profile);
+router.patch("/profile", updateProfile);
 
 export default router;

@@ -9,16 +9,12 @@ import {
   makePayment,
   bookSession,
 } from "../controllers/ProgramController";
-import { authorize } from "../middlewares/roleMiddleware";
-import { protect } from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
 // CRUD for Programs
 router.post(
   "/",
-  protect,
-  authorize(["SuperAdmin"]),
   upload.fields([
     { name: "image", maxCount: 1 },
     { name: "gallery", maxCount: 5 },
@@ -27,12 +23,10 @@ router.post(
 );
 
 router.get("/", getPrograms);
-router.get("/:id", protect, authorize(["User", "SuperAdmin"]), getProgramById);
+router.get("/:id", getProgramById);
 
 router.put(
   "/:id",
-  protect,
-  authorize(["SuperAdmin"]),
   upload.fields([
     { name: "image", maxCount: 1 },
     { name: "gallery", maxCount: 5 },
@@ -40,10 +34,10 @@ router.put(
   updateProgram
 );
 
-router.delete("/:id", protect, authorize(["SuperAdmin"]), deleteProgram);
+router.delete("/:id", deleteProgram);
 
-// Payments & Bookings (User only)
-router.post("/:id/payment", protect, makePayment);
-router.post("/:id/book", protect, bookSession);
+// Payments & Bookings (previously user-only)
+router.post("/:id/payment", makePayment);
+router.post("/:id/book", bookSession);
 
 export default router;

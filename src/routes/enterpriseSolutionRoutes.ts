@@ -6,20 +6,18 @@ import {
   updateEnterpriseSolution,
   deleteEnterpriseSolution,
 } from "../controllers/enterpriseController";
-import { protect } from "../middlewares/authMiddleware";
-import { authorize } from "../middlewares/roleMiddleware";
 
 const router = express.Router();
 
 router
   .route("/")
-  .post(protect, authorize(["SuperAdmin"]), createEnterpriseSolution)
-  .get( getEnterpriseSolutions);
+  .post(createEnterpriseSolution) // removed protect & authorize
+  .get(getEnterpriseSolutions);
 
 router
   .route("/:id")
-  .get( getEnterpriseSolutionById)
-  .put(protect, authorize(["SuperAdmin"]), updateEnterpriseSolution)
-  .delete(protect, authorize(["SuperAdmin"]), deleteEnterpriseSolution);
+  .get(getEnterpriseSolutionById)
+  .put(updateEnterpriseSolution) // removed protect & authorize
+  .delete(deleteEnterpriseSolution); // removed protect & authorize
 
 export default router;
