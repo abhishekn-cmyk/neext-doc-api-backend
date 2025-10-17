@@ -2,86 +2,74 @@ import mongoose, { Document, Schema, Model } from "mongoose";
 
 // ---------------- Types ----------------
 export interface IExam extends Document {
-  category: "English Proficiency" | "PLAB" | "Postgraduate";
-  subcategory?: string; // e.g. "QBank", "Starter Bundle", "Success Pathway"
-  title: string;
+  category?: "English Proficiency" | "PLAB" | "Postgraduate";
+  subcategory?: string;
+  title?: string;
   subtitle?: string;
-  description: string;
-  features: string[];
+  description?: string;
+  features?: string[];
   includes?: string[];
   mentors?: string[];
 
-  // Program Timeline
   timeline?: {
-    phase: string;
+    phase?: string;
     weeks?: string;
     details?: string;
   }[];
 
-  // Exam Components
   components?: {
-    name: string;
+    name?: string;
     type?: string;
-    details: string[];
+    details?: string[];
   }[];
 
-  // Mentorship
   mentorship?: {
-    included: boolean;
-    type: "1:1" | "group" | "principal";
-    sessions: number;
+    included?: boolean;
+    type?: "1:1" | "group" | "principal";
+    sessions?: number;
   };
 
-  // Pricing
   price?: number;
   currency?: string;
   pricingOptions?: {
-    label: string;
-    price: number;
+    label?: string;
+    price?: number;
   }[];
   paymentLink?: string;
 
-  // Exam type
   examType?: "IELTS" | "OET" | "PLAB-1" | "MRCP" | "MRCS" | "MRCOG" | "MRCPCH";
 
-  // Bundles
   bundleItems?: string[];
 
-  // Actions / CTAs
   actions?: {
-    label: string;
-    type: "enroll" | "download" | "consultation" | "purchase";
-    link: string;
+    label?: string;
+    type?: "enroll" | "download" | "consultation" | "purchase";
+    link?: string;
   }[];
 
-  // Dates & Duration
   startDate?: Date;
   endDate?: Date;
   duration?: string;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 // ---------------- Schema ----------------
 const ExamSchema = new Schema<IExam>(
   {
-    category: {
-      type: String,
-      enum: ["English Proficiency", "PLAB", "Postgraduate"],
-      required: true,
-    },
+    category: { type: String, enum: ["English Proficiency", "PLAB", "Postgraduate"] },
     subcategory: { type: String },
-    title: { type: String, required: true },
+    title: { type: String },
     subtitle: { type: String },
-    description: { type: String, required: true },
+    description: { type: String },
     features: { type: [String], default: [] },
     includes: { type: [String], default: [] },
     mentors: { type: [String], default: [] },
 
     timeline: [
       {
-        phase: { type: String, required: true },
+        phase: { type: String },
         weeks: { type: String },
         details: { type: String },
       },
@@ -89,14 +77,14 @@ const ExamSchema = new Schema<IExam>(
 
     components: [
       {
-        name: { type: String, required: true },
+        name: { type: String },
         type: { type: String },
         details: { type: [String], default: [] },
       },
     ],
 
     mentorship: {
-      included: { type: Boolean, default: false },
+      included: { type: Boolean },
       type: { type: String, enum: ["1:1", "group", "principal"] },
       sessions: { type: Number },
     },
@@ -105,8 +93,8 @@ const ExamSchema = new Schema<IExam>(
     currency: { type: String, default: "GBP" },
     pricingOptions: [
       {
-        label: { type: String, required: true },
-        price: { type: Number, required: true },
+        label: { type: String },
+        price: { type: Number },
       },
     ],
     paymentLink: { type: String },
@@ -120,13 +108,9 @@ const ExamSchema = new Schema<IExam>(
 
     actions: [
       {
-        label: { type: String, required: true },
-        type: {
-          type: String,
-          enum: ["enroll", "download", "consultation", "purchase"],
-          required: true,
-        },
-        link: { type: String, required: true },
+        label: { type: String },
+        type: { type: String, enum: ["enroll", "download", "consultation", "purchase"] },
+        link: { type: String },
       },
     ],
 
@@ -137,7 +121,7 @@ const ExamSchema = new Schema<IExam>(
   { timestamps: true }
 );
 
-// ---------------- Virtual / Pre-save hook ----------------
+// ---------------- Pre-save hook ----------------
 ExamSchema.pre<IExam>("save", function (next) {
   if (this.startDate && this.endDate) {
     const diffInMs = this.endDate.getTime() - this.startDate.getTime();
