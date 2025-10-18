@@ -7,20 +7,29 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 export const sendChat = asyncHandler(async (req: any, res: Response) => {
-  const { text } = req.body;
-  const userId = req.user?._id;
-   console.log(text);
-   console.log(userId);
+  const { text, userId, tab } = req.body; // ✅ extract userId from body
+
+  console.log("Text:", text);
+  console.log("User ID:", userId);
+  console.log("Tab:", tab);
+
   if (!text) {
-    res.status(400).json({ success: false, message: "Text is required" });
-    return;
+     res
+      .status(400)
+      .json({ success: false, message: "Text is required" });
   }
 
+  if (!userId) {
+     res
+      .status(401)
+      .json({ success: false, message: "User not authenticated" });
+  }
+
+  // Generate AI response
   const result = await model.generateContent(text);
-  console.log(result);
-  // Corrected line: Await the .text() method to get the string response.
   const response = await result.response.text();
 
+  // Save chat in MongoDB
   const chat = await Chat.create({
     userId,
     text,
@@ -36,6 +45,7 @@ export const sendChat = asyncHandler(async (req: any, res: Response) => {
     },
   });
 });
+
 
 export const getChats = asyncHandler(async (req: any, res: Response) => {
   const userId = req.user?._id;
